@@ -1,32 +1,51 @@
 # Joint-GAN
 
-Tensorflow implementation for reproducing results in [Joint GAN](https://arxiv.org/abs/1806.02978). Implemented based on [StackGAN](https://arxiv.org/abs/1612.03242). Many thanks for sharing the [code](https://github.com/hanzhanggit/StackGAN).
-
-### Dependencies
-- `python 2.7`
-- `TensorFlow 1.0.0`
-- `prettytensor`
-- `progressbar`
-- `python-dateutil`
-- `easydict`
-- `pandas`
-- `torchfile`
+Implementation of [Joint GAN](https://arxiv.org/abs/1806.02978) which is implemented based on [StackGAN](https://arxiv.org/abs/1612.03242) ([github](https://github.com/hanzhanggit/StackGAN)).
 
 
-**Data**
-1. Download the preprocessed char-CNN-RNN text embeddings for [birds](https://drive.google.com/open?id=0B3y_msrWZaXLT1BZdVdycDY5TEE) and save them to `Data/`
-2. Download the [birds](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) image data and extract to `Data/birds/`
-3. Preprocess images: `python misc/preprocess_birds.py`
+## Background Setup
 
-**Pretrained Model**
+1. Setup the python version: <br>
+`sudo apt-get install python3.7` <br>
+`sudo apt-get update -y` <br>
+`sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1` <br>
+`sudo update-alternatives --config python3 <<< '2'` 
 
-Download the pretrained LSTM decoder for [bird](https://drive.google.com/open?id=1j9do5K1BbghwD6W--XvJmbhj21XEEqjV) and unzip all files to `pretrain/`
+2. Setup the compatible pip: <br>
+`sudo apt install python3-pip` <br>
+`python -m pip install --upgrade --force-reinstall pip` 
 
-**Training**
 
-Train a Joint GAN model on the CUB dataset using the preprocessed data for birds: `python Main.py`
+3. Install the python dependencies and requirements: <br>
+`sudo apt install python3.7-distutils` <br>
+`pip3 install -r requirements.txt`
 
-**Results**
+4. Set the following variables in .env file: <br>
+`HOME_PATH=/path/to/Joint-GAN` <br>
+`PRETRAIN_PATH=/path/to/Joint-GAN/pretrain`
+
+[Note: Python environment can be used if you don't want to mess up with the versions on your system.]
+
+
+## Dataset Setup
+
+1. Download the [birds](https://drive.google.com/file/d/1eyBpuwjKUhTUtkPPyadDbEuVugRKwbGI/view?usp=sharing) image data and extract to `Data/birds/`.
+
+2. Preprocess images: [needs to be run for once] <br>
+`python3 misc/preprocess_birds.py`
+
+
+## Pretrained Model
+
+Download the [pretrained LSTM decoder](https://drive.google.com/file/d/1v5kAw9BeCL45SxVgtZGbRt1gge5q-860/view?usp=sharing)  for bird and unzip all files to `pretrain/`.
+
+
+## Training
+
+Train the Joint GAN model on the CUB dataset using the preprocessed data for birds: `python3 Main.py`
+
+
+## Results
 
 Generated results can be find in `ckt_logs/birds/`
 - `fake_images.jpg`: generated images from noise

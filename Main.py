@@ -43,20 +43,22 @@ if __name__ == "__main__":
     now = datetime.datetime.now(dateutil.tz.tzlocal())
     timestamp = now.strftime('%Y_%m_%d_%H_%M_%S')
 
-    datadir = 'Data/%s' % cfg.DATASET_NAME
-    dataset = TextDataset(datadir, cfg.EMBEDDING_TYPE, 1)
-    filename_test = '%s/test' % (datadir)
+    datadir = 'Data/%s' % cfg.DATASET_NAME                  # Data/birds
+    dataset = TextDataset(datadir, cfg.EMBEDDING_TYPE, 1)   # Data/birds, cnn-rnn
+    filename_test = '%s/test' % (datadir)                   # Data/birds/test
     dataset.test = dataset.get_data(filename_test)
     if cfg.TRAIN.FLAG:
-        filename_train = '%s/train' % (datadir)
+        filename_train = '%s/train' % (datadir)             # Data/birds/train
         dataset.train = dataset.get_data(filename_train)
 
         ckt_logs_dir = "ckt_logs/%s/%s_%s" % \
-            (cfg.DATASET_NAME, cfg.CONFIG_NAME, timestamp)
+            (cfg.DATASET_NAME, cfg.CONFIG_NAME, timestamp)  # ckt_logs/birds/_<timestamp>
         mkdir_p(ckt_logs_dir)
     else:
         s_tmp = cfg.TRAIN.PRETRAINED_MODEL
         ckt_logs_dir = s_tmp[:s_tmp.find('.ckpt')]
+
+##################################################################################################
 
     model = CondGAN(
         image_shape=dataset.image_shape

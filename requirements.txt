@@ -1,0 +1,9 @@
+prettytensor==0.7.4
+tensorflow==1.14.0
+python-dateutil==2.8.2
+protobuf==3.20.1
+easydict==1.10
+opencv-python==3.4.2.17
+progressbar==2.5
+nltk==3.8.1
+pycocoevalcap==1.2

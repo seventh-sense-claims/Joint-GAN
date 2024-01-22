@@ -1,8 +1,16 @@
 import numpy as np
 # import theano
 # from theano import config
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
+PRETRAIN_PATH = os.getenv('PRETRAIN_PATH')
+
 import sys
-sys.path.append('/home/yl353/Peter/Joint_GAN/text2image/pretrain')
+sys.path.insert(0, PRETRAIN_PATH)
+
+# sys.path.append('/home/yl353/Peter/Joint_GAN/text2image/pretrain')
 import tensorflow as tf
 from collections import OrderedDict
 import nltk
@@ -13,7 +21,7 @@ import pdb
 import data_utils
 import sys
 from tensorflow.python.ops import clip_ops
-from rougescore import rouge_n, rouge_1, rouge_2, rouge_l
+# from rougescore import rouge_n, rouge_1, rouge_2, rouge_l
 
 def lrelu(x, leak=0.2, name="lrelu"):
     with tf.variable_scope(name):
@@ -292,38 +300,38 @@ def cal_nkde(X,mu,sigma):
 #     BLEUscore = BLEUscore/len(generated)
 #     return BLEUscore
 
-def cal_ROUGE(generated, reference, is_corpus = False):
-    # ref and sample are both dict
-    # scorers = [
-    #     (Bleu(4), ["Bleu_1", "Bleu_2", "Bleu_3", "Bleu_4"]),
-    #     (Meteor(),"METEOR"),
-    #     (Rouge(), "ROUGE_L"),
-    #     (Cider(), "CIDEr")
-    # ]
-    # output rouge 1-4 and rouge L and rouge L from pycocoevaluate
+# def cal_ROUGE(generated, reference, is_corpus = False):
+#     # ref and sample are both dict
+#     # scorers = [
+#     #     (Bleu(4), ["Bleu_1", "Bleu_2", "Bleu_3", "Bleu_4"]),
+#     #     (Meteor(),"METEOR"),
+#     #     (Rouge(), "ROUGE_L"),
+#     #     (Cider(), "CIDEr")
+#     # ]
+#     # output rouge 1-4 and rouge L and rouge L from pycocoevaluate
     
     
-    ROUGEscore = [0.0]*6
-    for idx, g in enumerate(generated):
-        score = [0.0]*6
-        if is_corpus:
-            for order in range(4):
-                score[order] = rouge_n(g.split(), [x.split() for x in reference[0]], order+1, 0.5)
-            score[4] = rouge_l(g.split(), [x.split() for x in reference[0]], 0.5)
-            score[5], _ = Rouge().compute_score(reference, {0: [g]})
+#     ROUGEscore = [0.0]*6
+#     for idx, g in enumerate(generated):
+#         score = [0.0]*6
+#         if is_corpus:
+#             for order in range(4):
+#                 score[order] = rouge_n(g.split(), [x.split() for x in reference[0]], order+1, 0.5)
+#             score[4] = rouge_l(g.split(), [x.split() for x in reference[0]], 0.5)
+#             score[5], _ = Rouge().compute_score(reference, {0: [g]})
             
             
-        else:
-            for order in range(4):
-                score[order] = rouge_n(g.split(), [reference[0][idx].split()], order+1, 0.5)
-            score[4] = rouge_l(g.split(), [reference[0][idx].split()], 0.5)
-            score[5], _ = Rouge().compute_score({0: [reference[0][idx]]}, {0: [g]})
-            #pdb.set_trace()
-        #print g, score
-        ROUGEscore = [ r+score[idx]  for idx,r in enumerate(ROUGEscore)] 
-        #BLEUscore += nltk.translate.bleu_score.sentence_bleu(reference, g, weight)
-    ROUGEscore = [r/len(generated) for r in ROUGEscore]
-    return ROUGEscore
+#         else:
+#             for order in range(4):
+#                 score[order] = rouge_n(g.split(), [reference[0][idx].split()], order+1, 0.5)
+#             score[4] = rouge_l(g.split(), [reference[0][idx].split()], 0.5)
+#             score[5], _ = Rouge().compute_score({0: [reference[0][idx]]}, {0: [g]})
+#             #pdb.set_trace()
+#         #print g, score
+#         ROUGEscore = [ r+score[idx]  for idx,r in enumerate(ROUGEscore)] 
+#         #BLEUscore += nltk.translate.bleu_score.sentence_bleu(reference, g, weight)
+#     ROUGEscore = [r/len(generated) for r in ROUGEscore]
+#     return ROUGEscore
     
     
 

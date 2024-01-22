@@ -4,7 +4,8 @@ from __future__ import print_function
 import prettytensor as pt
 import tensorflow as tf
 import numpy as np
-import scipy.misc
+# import scipy.misc
+import cv2
 import os
 import sys
 import pdb
@@ -12,7 +13,8 @@ from six.moves import range
 from progressbar import ETA, Bar, Percentage, ProgressBar
 from pretrain.utils import  restore_from_save
 from tensorflow.contrib.tensorboard.plugins import projector
-import cPickle
+# import cPickle
+import pickle
 from misc.config import cfg
 from misc.utils import mkdir_p
 
@@ -26,7 +28,9 @@ def KL_loss(mu, log_sigma):
         loss = tf.reduce_mean(loss)
         return loss
 
-word, vocab = cPickle.load(open("./pretrain/vocab_cotra.pkl"))
+with open("./pretrain/vocab_cotra.pkl" , 'rb') as f:
+    word, vocab = pickle.load(f)
+# word, vocab = cPickle.load(open("./pretrain/vocab_cotra.pkl"))
 
 def save_txt(output_file, input_file, vocab = vocab, word = word):
     with open(output_file, 'w') as fout:
@@ -502,8 +506,10 @@ class CondGANTrainer(object):
             sess.run([self.superimages, self.image_summary, self.fake_words, self.gen_fake_words_samples], feed_dict)
 
         # save images generated for train and test captions
-        scipy.misc.imsave('%s/gen_fake_images.jpg' % (self.log_dir), gen_samples[0])
-        scipy.misc.imsave('%s/fake_images.jpg' % (self.log_dir), gen_samples[1])
+        cv2.imwrite('%s/gen_fake_images.jpg' % (self.log_dir), gen_samples[0])
+        cv2.imwrite('%s/fake_images.jpg' % (self.log_dir), gen_samples[1])
+        # scipy.misc.imsave('%s/gen_fake_images.jpg' % (self.log_dir), gen_samples[0])
+        # scipy.misc.imsave('%s/fake_images.jpg' % (self.log_dir), gen_samples[1])
         
         save_txt(self.checkpoint_dir+'/fake_sentences.txt', fake_word)
         save_txt(self.checkpoint_dir+'/gen_fake_sentences.txt', gen_fake_word)
@@ -686,7 +692,8 @@ class CondGANTrainer(object):
 
             superimage = np.concatenate(superimage, axis=1)
             fullpath = '%s_sentence%d.jpg' % (s_tmp, sentenceID)
-            scipy.misc.imsave(fullpath, superimage)
+            cv2.imwrite(fullpath, superimage)
+            # scipy.misc.imsave(fullpath, superimage)
 
     def eval_one_dataset(self, sess, dataset, save_dir, subset='train'):
         count = 0

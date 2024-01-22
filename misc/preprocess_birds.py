@@ -3,15 +3,19 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-# import tensorflow as tf
+import os
+from dotenv import load_dotenv
+load_dotenv()
+HOME_PATH = os.getenv('HOME_PATH')
+
 import sys
-sys.path.append('/home/yl353/Peter/StackGAN-master')
+sys.path.insert(0, HOME_PATH)
 
 import numpy as np
 import os
 import pickle
 from misc.utils import get_image
-import scipy.misc
+import cv2
 import pandas as pd
 
 
@@ -47,7 +51,7 @@ def load_bbox(data_dir):
     #
     filename_bbox = {img_file[:-4]: [] for img_file in filenames}
     numImgs = len(filenames)
-    for i in xrange(0, numImgs):
+    for i in range(0, numImgs):
         # bbox = [x-left, y-top, width, height]
         bbox = df_bounding_boxes.iloc[i][1:].tolist()
 
@@ -68,7 +72,8 @@ def save_data_list(inpath, outpath, filenames, filename_bbox):
         img = get_image(f_name, LOAD_SIZE, is_crop=True, bbox=bbox)
         img = img.astype('uint8')
         hr_images.append(img)
-        lr_img = scipy.misc.imresize(img, [lr_size, lr_size], 'bicubic')
+        lr_img = cv2.resize(img, dsize=(lr_size, lr_size), interpolation=cv2.INTER_CUBIC)
+        # lr_img = scipy.misc.imresize(img, [lr_size, lr_size], 'bicubic')
         lr_images.append(lr_img)
         cnt += 1
         if cnt % 100 == 0:
